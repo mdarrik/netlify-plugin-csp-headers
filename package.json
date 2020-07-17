@@ -4,6 +4,15 @@
   "main": "index.js",
   "repository": "https://github.com/mdarrik/netlify-plugin-csp-hash.git",
   "author": "Darrik <30670444+mdarrik@users.noreply.github.com>",
+  "license": "MIT",
+  "dependencies": {
+    "hast-util-is-css-link": "^1.0.4",
+    "hast-util-is-css-style": "^1.0.4",
+    "hast-util-is-javascript": "^1.0.4",
+    "rehype-parse": "^7.0.1",
+    "unified": "^9.0.0",
+    "unist-util-visit": "^2.0.3"
+  },
   "devDependencies": {
     "eslint": "^7.4.0"
   },
