@@ -1,0 +1,7 @@
+{
+  "name": "netlify-plugin-csp-hash",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "https://github.com/mdarrik/netlify-plugin-csp-hash.git",
+  "author": "Darrik <30670444+mdarrik@users.noreply.github.com>",
+}
