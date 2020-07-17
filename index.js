@@ -73,11 +73,11 @@ function visitNode(tree) {
         if(!node.properties.src && node.tagName !== 'link') {
         const sha256Hash = crypto.createHash('sha256')
         sha256Hash.update(node.children[0].value)
-        hashLists[node.tagName].push(`sha256-${sha256Hash.digest('hex')}`)
+        hashLists[node.tagName].push(`'sha256-${sha256Hash.digest('hex')}'`)
         } else if(node.properties.src) {
-            hashLists[node.tagName].push(node.properties.src);
+            hashLists[node.tagName].push(`'${node.properties.src}'`);
         } else if(node.tagName === 'link') {
-            hashLists.style.push(node.properties.href);
+            hashLists.style.push(`'${node.properties.href}'`);
         }
     })
     return hashLists
@@ -88,6 +88,6 @@ function generateRedirectString({filePath, hashes}, publishPath) {
 const url = filePath.replace(publishPath, '').replace(/^\/index.html/, '/');
 return (
 `${url}
-    Content-Security-Policy: script-src ${hashes['script'].join(' ')}; style-src ${hashes['style'].join(' ')};
+    Content-Security-Policy: script-src ${hashes['script'].join(" ")}; style-src ${hashes['style'].join(' ')};
 `)
 }
