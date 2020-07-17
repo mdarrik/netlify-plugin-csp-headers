@@ -19,10 +19,9 @@ module.exports= {
            await fs.appendFile(path.join(constants.PUBLISH_DIR, '_headers'), redirectStrings.join(' '))  
            utils.status.show({
                title: 'Source Hashing Completed Successfully',
-               summary: `${htmlFiles.length} Files Processed. ${cspHashes.reduce((numHashesCounted, currentHash) => {
-                   numHashesCounted += currentHash.hashes.script.length + currentHash.hashes.style.length
-               }, 0)}`,
-               text: cspHashes.map((hash) => `file: ${hash.filePath}, number of script tags hashed: ${hash.hashes.script.length}, number of style tags hashed: ${hash.hashes.style.length}`).join('\n')
+               summary: `${htmlFiles.length} Files Processed. ${cspHashes.reduce((numHashesCounted, currentHash) => 
+                    numHashesCounted + currentHash.hashes.script.length + currentHash.hashes.style.length, 0)} tags processed`,
+               text: cspHashes.map((hash) => `file: ${hash.filePath}, number of script tags added to CSP headers: ${hash.hashes.script.length}, number of style tags added to CSP headers: ${hash.hashes.style.length}`).join('\n')
            }) 
         } catch (error) {
             utils.build.failPlugin(error.message);
