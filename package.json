@@ -1,5 +1,5 @@
 {
-  "name": "netlify-plugin-csp-hash",
+  "name": "netlify-plugin-csp-headers",
   "version": "0.0.1-alpha",
   "main": "index.js",
   "repository": "https://github.com/mdarrik/netlify-plugin-csp-hash.git",
