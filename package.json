@@ -4,4 +4,10 @@
   "main": "index.js",
   "repository": "https://github.com/mdarrik/netlify-plugin-csp-hash.git",
   "author": "Darrik <30670444+mdarrik@users.noreply.github.com>",
+  "devDependencies": {
+    "eslint": "^7.4.0"
+  },
+  "scripts": {
+    "lint": "eslint *.js"
+  }
 }
