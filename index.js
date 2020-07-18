@@ -88,6 +88,6 @@ function generateRedirectString({filePath, hashes}, publishPath) {
 const url = filePath.replace(publishPath, '').replace(/^\/index.html/, '/');
 return (
 `${url}
-    Content-Security-Policy: default-src self; script-src unsafe-inline ${hashes['script'].join(" ")}; style-src unsafe-inline ${hashes['style'].join(' ')};
+    Content-Security-Policy: default-src 'self'; script-src 'unsafe-inline' ${hashes['script'].join(" ")}; style-src 'unsafe-inline' ${hashes['style'].join(' ')};
 `)
 }
