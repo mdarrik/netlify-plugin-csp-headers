@@ -1,3 +1,4 @@
+name: 'Changeset PR'
 on:
   push:
     branches:
