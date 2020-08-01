@@ -9,8 +9,11 @@ const isScriptTag = require('hast-util-is-javascript');
 const isStyleTag = require('hast-util-is-css-style')
 const isCssLink = require('hast-util-is-css-link')
 
+let unsafeInlineStyles = process.env.CSP_HEADERS_UNSAFE_STYLES ?? false
+
 module.exports= {
-    onPostBuild: async function({constants, utils}) {
+    onPostBuild: async function({constants, utils, inputs}) {
+        unsafeInlineStyles = inputs.unsafeStyles ?? unsafeInlineStyles
         try {
             const htmlFiles = await getHtmlFilesFromDir(constants.PUBLISH_DIR)
             const cspHashesPromises = htmlFiles.map(file => processHtmlFile(file));
@@ -88,6 +91,6 @@ function generateRedirectString({filePath, hashes}, publishPath) {
 const url = filePath.replace(publishPath, '').replace(/^\/index.html/, '/');
 return (
 `${url}
-    Content-Security-Policy: default-src 'self'; script-src 'self' 'strict-dynamic' 'unsafe-inline' ${hashes['script'].join(" ")}; style-src 'self' 'unsafe-inline' ${hashes['style'].join(' ')};
+    Content-Security-Policy: default-src 'self'; script-src 'self' 'strict-dynamic' 'unsafe-inline' ${hashes['script'].join(" ")}; style-src 'self' 'unsafe-inline' ${unsafeInlineStyles ? '' : hashes['style'].join(' ')};
 `)
 }
