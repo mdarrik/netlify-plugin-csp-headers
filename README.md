@@ -6,6 +6,30 @@ While static sites are fairly secure, there's still a risk of Cross Site Scripti
 
 CSP Headers can also help you get better scores on some automated tests, like [Web Page Test](https://www.webpagetest.org/)
 
+## Installation
+Currently, this plugin is not available in the Netlify UI. To install it, perform the following steps: 
+
+1. Add it to your Netlify.toml by adding the following to the Netlify.toml. This plugin should go after any other plugins that modify your html pages. This will prevent hashes from getting mismatched. 
+```toml
+[[plugins]]
+package = "netlify-plugin-csp-headers"
+```
+1. Install the plugin in your package.json using either npm or yarn. 
+```bash
+npm install -D netlify-plugin-csp-headers
+```
+```bash
+yarn add -D netlify-plugin-csp-headers
+```
+1. Deploy your site. If you have deploy previews turned on, it's probably best to test this plugin in a deploy preview. This can help you make sure you don't accidentally break your site when you turn on CSP headers. Typically, this involves making the above changes in a pull request. 
+
+## Inputs/Options
+
+|Input | Environment Variable | Allowed Values | Description 
+--- | --- | --- | ---
+|`unsafeStyles` | `CSP_HEADERS_UNSAFE_STYLES` | `true`, `false` |  A value of `true` removes the style tag hashes from your inline styles. This way any post-processing modifications/runtime styles still work on your site. 
+
+
 
 ## Warning about Netlify Asset Optimizations
 
@@ -13,7 +37,7 @@ To improve the security of inline script & style tags, it takes a hash of the co
 
 1. Move all `<style>` tags with font declarations to an external file. This will add additional network requests to your page load, and may cause performance to drop slightly. 
 1. Turn off all optimizations (including pretty urls 😢). This will stop Netlify from changing anything about your code. You'll also be responsible for optimizing all of your own assets. It may also prevent "pretty urls" from working correctly on your site (so pages might be at `https://example.com/route/index.html` instead of `https://example.com/route/`). 
-1. Add the environment variable `CSP_HEADERS_UNSAFE_STYLE` with a value of `true` in your Netlify UI Dashboard. The plugin will then not include any hashes for style tags in the CSP headers. This is probably mostly safe. However, there are some risks of malicious `<style>` elements, especially around images. 
+1. Add the environment variable `CSP_HEADERS_UNSAFE_STYLE` with a value of `true` in your Netlify UI Dashboard. The plugin will then not include any hashes for style tags in the CSP headers. This is probably mostly safe. However, there are some risks of malicious `<style>` elements, especially around images. The default CSP header added by the site should prevent at least some of the risks associated with images. 
 
 
 
