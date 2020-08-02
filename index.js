@@ -10,18 +10,20 @@ const isStyleTag = require('hast-util-is-css-style')
 const isCssLink = require('hast-util-is-css-link')
 
 let unsafeInlineStyles = process.env.CSP_HEADERS_UNSAFE_STYLES ?? false
+let reportUrl = process.env.CSP_HEADERS_REPORT_URL
 
 module.exports= {
     onPostBuild: async function({constants, utils, inputs}) {
         unsafeInlineStyles = inputs.unsafeStyles ?? unsafeInlineStyles
+        reportUrl = inputs.reportUrl ?? reportUrl
         try {
             const htmlFiles = await getHtmlFilesFromDir(constants.PUBLISH_DIR)
             //process all html files asynchronously
             const cspHashesPromises = htmlFiles.map(file => processHtmlFile(file));
             const cspHashes = await Promise.all(cspHashesPromises);
-
+            const reportToHeader = generateReportGroup();
             // generate cspStrings for each file and write to _headers file
-            const cspHeadersStrings = cspHashes.map((hashData) => generateCSPHeader(hashData, constants.PUBLISH_DIR));
+            const cspHeadersStrings = cspHashes.map((hashData) => generateCSPHeader(hashData, constants.PUBLISH_DIR, reportToHeader));
            await fs.appendFile(path.join(constants.PUBLISH_DIR, '_headers'), cspHeadersStrings.join(' '))  
            // update the status to provide a summary.
            utils.status.show({
@@ -105,12 +107,33 @@ function visitNode(tree) {
  *
  * @param {{filePath: string, hashes: {script: [string], style: [string]}}} {filePath, hashes}
  * @param {string} publishPath
+ * @param {string} reportToHeader - Report-To header. 
  * @returns {string} A CSP string for the url created by filePath. 
  */
-function generateCSPHeader({filePath, hashes}, publishPath) {
+function generateCSPHeader({filePath, hashes}, publishPath, reportToHeader) {
 const url = filePath.replace(publishPath, '').replace(/^\/index.html/, '/');
 return (
-`${url}
-    Content-Security-Policy: default-src 'self'; script-src 'self' 'strict-dynamic' 'unsafe-inline' ${hashes['script'].join(" ")}; style-src 'self' 'unsafe-inline' ${unsafeInlineStyles ? '' : hashes['style'].join(' ')};
+`${url} ${reportToHeader === '' ? '' : `
+${reportToHeader}`}
+    Content-Security-Policy: default-src 'self'; script-src 'self' 'strict-dynamic' 'unsafe-inline' ${hashes['script'].join(" ")}; style-src 'self' 'unsafe-inline' ${unsafeInlineStyles ? '' : hashes['style'].join(' ')}; ${ reportUrl == null ? null : `report-to netlify-csp-endpoint; report-uri ${reportUrl};`}
 `)
+}
+/**
+ *Generates the Report-To CSP string based on the reportUrl. 
+ *
+ * @returns {string} The Report-To header to be used in newer browsers for sending CSP reports to. 
+ */
+function generateReportGroup() {
+    if(reportUrl === undefined || reportUrl === null) {
+        return '';
+    }
+    const reportToHeader = {};
+    reportToHeader["Report-To"] = {
+        group: "netlify-csp-endpoint",
+        max_age: "10886400",
+        endpoints: [{
+            url: reportUrl
+        }]
+    }
+    return JSON.stringify(reportToHeader)
 }
