@@ -2,3 +2,6 @@ name: netlify-plugin-csp-hash
 inputs: 
   - name: unsafeStyles
     description: Value of "true" allows unsafe-inline styles in your site. This leaves the style tag hashes out of your CSP headers. This gets around issues from Netlify transforming urls and other things after the plugin runs. Can instead use CSP_HEADERS_UNSAFE_STYLES environment variable. 
+  - name: reportUrl
+    description: url for the CSP-reports. Useful for monitoring/debugging issues with the CSP configuration. 
+    
