@@ -114,7 +114,7 @@ function generateCSPHeader({filePath, hashes}, publishPath, reportToHeader) {
 const url = filePath.replace(publishPath, '').replace(/^\/index.html/, '/');
 return (
 `${url} ${reportToHeader === '' ? '' : `
-${reportToHeader}`}
+    ${reportToHeader}`}
     Content-Security-Policy: default-src 'self'; script-src 'self' 'strict-dynamic' 'unsafe-inline' ${hashes['script'].join(" ")}; style-src 'self' 'unsafe-inline' ${unsafeInlineStyles ? '' : hashes['style'].join(' ')}; ${ reportUrl == null ? null : `report-to netlify-csp-endpoint; report-uri ${reportUrl};`}
 `)
 }
@@ -127,13 +127,12 @@ function generateReportGroup() {
     if(reportUrl === undefined || reportUrl === null) {
         return '';
     }
-    const reportToHeader = {};
-    reportToHeader["Report-To"] = {
+    const reportTo= {
         group: "netlify-csp-endpoint",
         max_age: "10886400",
         endpoints: [{
             url: reportUrl
         }]
     }
-    return JSON.stringify(reportToHeader)
+    return `Report-To: ${JSON.stringify(reportTo)}`
 }
