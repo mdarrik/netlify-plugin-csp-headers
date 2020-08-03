@@ -28,6 +28,7 @@ yarn add -D netlify-plugin-csp-headers
 |Input | Environment Variable | Allowed Values | Description 
 --- | --- | --- | ---
 |`unsafeStyles` | `CSP_HEADERS_UNSAFE_STYLES` | `true`, `false` |  A value of `true` removes the style tag hashes from your inline styles. This way any post-processing modifications/runtime styles still work on your site. 
+|`reportUrl` | `CSP_HEADERS_REPORT_URL` | a url (relative or absolute) | Browsers will send CSP reports to this url. By recording these values, you can keep track of violations. Useful for both debugging & security purposes. 
 
 
 
