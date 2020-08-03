@@ -11,10 +11,12 @@ const isCssLink = require('hast-util-is-css-link')
 
 let unsafeInlineStyles = process.env.CSP_HEADERS_UNSAFE_STYLES ?? false
 let reportUrl = process.env.CSP_HEADERS_REPORT_URL
+let allowCloudfrontSource = process.env.CSP_HEADERS_ALLOW_CLOUDFRONT_SOURCE
 
 module.exports= {
     onPostBuild: async function({constants, utils, inputs}) {
         unsafeInlineStyles = inputs.unsafeStyles ?? unsafeInlineStyles
+        allowCloudfrontSource = inputs.allowCloudfrontSource ?? allowCloudfrontSource
         reportUrl = inputs.reportUrl ?? reportUrl
         try {
             const htmlFiles = await getHtmlFilesFromDir(constants.PUBLISH_DIR)
@@ -115,7 +117,7 @@ const url = filePath.replace(publishPath, '').replace(/^\/index.html/, '/');
 return (
 `${url} ${reportToHeader === '' ? '' : `
     ${reportToHeader}`}
-    Content-Security-Policy: default-src 'self'; script-src 'self' 'strict-dynamic' 'unsafe-inline' ${hashes['script'].join(" ")}; style-src 'self' 'unsafe-inline' ${unsafeInlineStyles ? '' : hashes['style'].join(' ')}; ${ reportUrl == null ? null : `report-to netlify-csp-endpoint; report-uri ${reportUrl};`}
+    Content-Security-Policy: default-src 'self' ${allowCloudfrontSource ? `'https://*.cloudfront.net'` : ''}; script-src 'self' 'strict-dynamic' 'unsafe-inline' ${hashes['script'].join(" ")}; style-src 'self' 'unsafe-inline' ${unsafeInlineStyles ? '' : hashes['style'].join(' ')}; ${ reportUrl == null ? null : `report-to netlify-csp-endpoint; report-uri ${reportUrl};`}
 `)
 }
 /**

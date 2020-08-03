@@ -4,4 +4,5 @@ inputs:
     description: Value of "true" allows unsafe-inline styles in your site. This leaves the style tag hashes out of your CSP headers. This gets around issues from Netlify transforming urls and other things after the plugin runs. Can instead use CSP_HEADERS_UNSAFE_STYLES environment variable. 
   - name: reportUrl
     description: url for the CSP-reports. Useful for monitoring/debugging issues with the CSP configuration. 
-    
+  - name: allowCloudfrontSource
+    description: allows cloudfront sources as part of the "default src" CSP header. This should work to prevent asset optimized content that's not a script or style tag from being blocked by CSP headers. But malicious attackers could potentially use a cloudfront url to allow malicious content. 
