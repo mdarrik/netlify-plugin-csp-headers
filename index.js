@@ -96,9 +96,9 @@ function visitNode(tree) {
         sha256Hash.update(node.children[0].value)
         hashLists[node.tagName].push(`'sha256-${sha256Hash.digest('base64')}'`)
         } else if(node.properties.src) {
-            hashLists[node.tagName].push(`'${node.properties.src}'`);
+            hashLists[node.tagName].push(`${node.properties.src}`);
         } else if(node.tagName === 'link') {
-            hashLists.style.push(`'${node.properties.href}'`);
+            hashLists.style.push(`${node.properties.href}`);
         }
     })
     return hashLists
@@ -117,7 +117,7 @@ const url = filePath.replace(publishPath, '').replace(/^\/index.html/, '/');
 return (
 `${url} ${reportToHeader === '' ? '' : `
     ${reportToHeader}`}
-    Content-Security-Policy: default-src 'self' ${allowCloudfrontSource ? `'https://*.cloudfront.net'` : ''}; script-src 'self' 'strict-dynamic' 'unsafe-inline' ${hashes['script'].join(" ")}; style-src 'self' 'unsafe-inline' ${unsafeInlineStyles ? '' : hashes['style'].join(' ')}; ${ reportUrl == null ? null : `report-to netlify-csp-endpoint; report-uri ${reportUrl};`}
+    Content-Security-Policy: default-src 'self' ${allowCloudfrontSource ? `https://*.cloudfront.net` : ''}; object-src 'none'; script-src 'self' 'strict-dynamic' 'unsafe-inline' ${hashes['script'].join(" ")}; style-src 'self' 'unsafe-inline' ${unsafeInlineStyles ? '' : hashes['style'].join(' ')}; ${ reportUrl == null ? null : `report-to netlify-csp-endpoint; report-uri ${reportUrl};`}
 `)
 }
 /**
