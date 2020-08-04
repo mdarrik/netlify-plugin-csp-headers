@@ -96,7 +96,7 @@ function visitNode(tree) {
         sha256Hash.update(node.children[0].value)
         hashLists[node.tagName].push(`'sha256-${sha256Hash.digest('base64')}'`)
         } else if(node.properties.src) {
-            hashLists[node.tagName].push(`'${node.properties.src}'`);
+            hashLists[node.tagName].push(`${node.properties.src}`);
         } else if(node.tagName === 'link') {
             hashLists.style.push(`${node.properties.href}`);
         }
