@@ -1,6 +1,6 @@
 {
   "name": "netlify-plugin-csp-headers",
-  "version": "0.0.1-alpha.07",
+  "version": "0.0.1-alpha.08",
   "main": "index.js",
   "repository": "https://github.com/mdarrik/netlify-plugin-csp-hash.git",
   "author": "Darrik <30670444+mdarrik@users.noreply.github.com>",
